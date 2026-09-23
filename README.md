@@ -14,11 +14,22 @@ A bite does not turn you. It makes you bleed.
 - **The first infected is different.** More health, less knockback, a long leap (E) and a one-second berserk (R)
   during which nothing can hurt them.
 - **Zombies are real threats.** Health scales with the number of humans, zombies regenerate when they are left
-  alone, and they cannot pick up guns.
+  alone, and they cannot pick up guns. They are tinted red, so you can tell who turned at a glance.
 - **Knockback that feels right.** Humans push zombies away from the shooter, weapon classes push differently, a
   knife hit can save you at point-blank range.
 - **Rounds end.** Humans win by killing every zombie, zombies by infecting every human. At the time limit an
   airstrike finishes the zombies off.
+
+![The first infected on the Project Zero server](docs/images/first-infected.jpg)
+
+*The first infected on our server: 3521 of 6250 real health behind the 999 the engine can display, leap on E,
+berserk on R. The red vision and this HUD are our server's own add-ons — this repository gives you the mechanics
+and the hooks to build your own.*
+
+![A night map with a flashlight](docs/images/night-flashlight.jpg)
+
+*A night map on our server: humans play it in the dark with a flashlight and limited batteries. The flashlight is
+one of our own extensions, built on the same API you get here.*
 
 ## Modules
 
@@ -30,6 +41,12 @@ A bite does not turn you. It makes you bleed.
 | `ZombieMode.WeaponDamage` | Per-weapon damage multipliers against zombies, tuned on a live server. |
 
 Each extension is a separate plugin: remove the ones you do not want, replace them with your own.
+
+![A round shop built on top of the core](docs/images/shop.jpg)
+
+*Our own round shop, built on top of the core: opens on B before the outbreak and can buy for a teammate. It is not
+in this repository — the Money extension works with the stock buy menu — but the technique is open:
+[cs2-hud-panel](https://github.com/nvmxre/cs2-hud-panel).*
 
 ## Install
 
