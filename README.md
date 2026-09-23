@@ -46,8 +46,10 @@ Build from source instead: `./build.sh` (needs the .NET 10 SDK), then copy `dist
 ## Sound
 
 Growls, pain and death from the zombie's position, a heartbeat while you bleed, a countdown to the first infection,
-round start and round end music, ambience. The sounds reach players as a Workshop addon through
-[MultiAddonManager](https://github.com/Source2ZE/MultiAddonManager) — see [sounds/README.md](sounds/README.md).
+round start and round end music, ambience. The sounds reach players as a Workshop addon —
+[CS2 Zombie Mode — Sound Pack](https://steamcommunity.com/sharedfiles/filedetails/?id=3806882583) (ID `3806882583`) — through
+[MultiAddonManager](https://github.com/Source2ZE/MultiAddonManager): add `3806882583` to `mm_extra_addons`.
+Details in [sounds/README.md](sounds/README.md).
 Every event name is in the config, so you can swap in your own sounds.
 
 ## Configure

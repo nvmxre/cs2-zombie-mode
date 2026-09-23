@@ -6,8 +6,11 @@ Workshop addon.
 
 ## Use the published addon
 
+Workshop: [CS2 Zombie Mode — Sound Pack](https://steamcommunity.com/sharedfiles/filedetails/?id=3806882583), ID `3806882583`.
+
 1. Install [MultiAddonManager](https://github.com/Source2ZE/MultiAddonManager) on your server.
-2. Add the addon's Workshop ID to `mm_extra_addons` in `csgo/cfg/multiaddonmanager/multiaddonmanager.cfg`.
+2. Add `3806882583` to `mm_extra_addons` in `csgo/cfg/multiaddonmanager/multiaddonmanager.cfg`, e.g.
+   `mm_extra_addons "3806882583"` (comma-separated if you already have other addons).
 3. Players download it automatically when they join.
 
 ## Build it yourself
