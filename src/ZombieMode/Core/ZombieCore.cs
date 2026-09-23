@@ -2074,13 +2074,24 @@ public sealed class ZombieCore : IZombieCore
         // The kill feed entry goes out BEFORE the side switch, and the switch waits one frame. The client draws the
         // feed with the victim's side at the moment the event arrives: switching in the same frame showed
         // "T killed T" instead of "a zombie infected a human".
-        AnnounceInfection(player, attacker);
-        Server.NextFrame(() =>
+        // Not for the round's first infected (no attacker): there is no feed entry for them, and the side is needed AT
+        // ONCE — the engine's win conditions come back on at this very moment (cvarsOnInfection), and with the
+        // Terrorist side still empty it would end the round on the spot.
+        if (attacker is null)
         {
-            if (!player.IsValid || !_infected.Contains(player.Slot)) return;
             player.SwitchTeam(CsTeam.Terrorist);
-            Unstick(player);
-        });
+            Server.NextFrame(() => Unstick(player));
+        }
+        else
+        {
+            AnnounceInfection(player, attacker);
+            Server.NextFrame(() =>
+            {
+                if (!player.IsValid || !_infected.Contains(player.Slot)) return;
+                player.SwitchTeam(CsTeam.Terrorist);
+                Unstick(player);
+            });
+        }
         GiveKnifeOnly(player);
         // The engine applies the team model on the next frame and overwrites ours — so the look is set after it.
         Server.NextWorldUpdate(() => ApplyZombieLook(player));
