@@ -97,6 +97,12 @@ public override void OnAllPluginsLoaded(bool hotReload)
 
 The full contract is one file: [`src/ZombieMode.Api/IZombieCore.cs`](src/ZombieMode.Api/IZombieCore.cs).
 
+## Related
+
+- **[cs2-hud-panel](https://github.com/nvmxre/cs2-hud-panel)** — our library for clickable, flicker-free HUD
+  panels in CS2 (`custom_hud_layout`), opened with the stock B key. Shops, zombie HUDs, menus: the natural next
+  extension for this mode. MIT.
+
 ## Play it
 
 This mode runs on the **Project Zero** servers — a CS2 project about the first day of an outbreak, with units,

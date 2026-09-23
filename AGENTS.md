@@ -44,6 +44,10 @@ What `IZombieCore` gives you (see `src/ZombieMode.Api/IZombieCore.cs` — it is 
 | Show core messages in your own HUD | `Notices = new MySink()` |
 | Build a mode (boss arena, event) | `PickFirst`, `InfectDelay`, `StrikeTarget`, `Infect`, `EndRound` |
 
+Need something on screen (a shop, a zombie HUD, a menu with mouse clicks)? Do not fight `PrintToCenterHtml`:
+use [cs2-hud-panel](https://github.com/nvmxre/cs2-hud-panel) (`custom_hud_layout`, opens on the stock B key) and
+read its `docs/GOTCHAS.md` first. Route the core's notices into it with `core.Notices = new MySink()`.
+
 Rules for extensions:
 - Never read the player's team to decide "is this a zombie". Ask `IsInfected`. The team switch happens a frame
   later than the infection.
