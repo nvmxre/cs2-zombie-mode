@@ -14,7 +14,10 @@ A bite does not turn you. It makes you bleed.
 - **The first infected is different.** More health, less knockback, a long leap (E) and a one-second berserk (R)
   during which nothing can hurt them.
 - **Zombies are real threats.** Health scales with the number of humans, zombies regenerate when they are left
-  alone, and they cannot pick up guns. They are tinted red, so you can tell who turned at a glance.
+  alone, and they cannot pick up guns.
+- **You still see who they were.** No generic zombie models: a player keeps their own character model after
+  turning, only tinted red. The zombie coming at you is your teammate from a minute ago, and you recognise him.
+  (Servers that want a dedicated zombie model can set `infection.zombieModel`.)
 - **Knockback that feels right.** Humans push zombies away from the shooter, weapon classes push differently, a
   knife hit can save you at point-blank range.
 - **Rounds end.** Humans win by killing every zombie, zombies by infecting every human. At the time limit an
