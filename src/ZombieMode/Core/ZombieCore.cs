@@ -45,7 +45,6 @@ public sealed class ZombieCore : IZombieCore
     /// <summary>Slot → until when the player passes through others after turning.</summary>
     private readonly Dictionary<int, float> _passable = new();
     private bool _pickupHooked;
-    private bool _useHooked;
     private bool _damageHooked;
 
     /// <summary>Whether a fake death event (the infection shown in the kill feed) is being fired right now.</summary>
@@ -324,12 +323,6 @@ public sealed class ZombieCore : IZombieCore
             _pickupHooked = false;
         }
 
-        if (_useHooked)
-        {
-            try { VirtualFunctions.CCSPlayer_WeaponServices_CanUseFunc.Unhook(OnCanUse, HookMode.Pre); }
-            catch (Exception e) { _log($"use hook was not removed: {e.Message}"); }
-            _useHooked = false;
-        }
 
         if (_damageHooked)
         {
@@ -1400,8 +1393,6 @@ public sealed class ZombieCore : IZombieCore
         {
             VirtualFunctions.CCSPlayer_ItemServices_CanAcquireFunc.Hook(OnCanAcquire, HookMode.Pre);
             _pickupHooked = true;
-            VirtualFunctions.CCSPlayer_WeaponServices_CanUseFunc.Hook(OnCanUse, HookMode.Pre);
-            _useHooked = true;
         }
         catch (Exception e)
         {
@@ -1569,30 +1560,6 @@ public sealed class ZombieCore : IZombieCore
         return HookResult.Changed;
     }
 
-    /// <summary>
-    /// Picking a weapon up from the floor — by touch. That is decided by CanUse, not CanAcquire (which covers gives
-    /// and purchases). Without this hook a zombie picked the gun up, the per-tick safety net dropped it, the zombie was
-    /// still standing on it and picked it up again — "picks it up and throws it away" in a loop. Now it stays on the floor.
-    /// </summary>
-    private HookResult OnCanUse(DynamicHook hook)
-    {
-        if (_giving > 0) return HookResult.Continue;
-
-        var services = hook.GetParam<CCSPlayer_WeaponServices>(0);
-        var pawn = services?.Pawn.Value;
-        var controller = pawn?.Controller.Value?.As<CCSPlayerController>();
-        if (controller is null || !controller.IsValid || !_infected.Contains(controller.Slot)) return HookResult.Continue;
-
-        // The knife stays usable: it is the zombie's only weapon.
-        var weapon = hook.GetParam<CBasePlayerWeapon>(1);
-        var name = weapon?.DesignerName ?? string.Empty;
-        if (name.Contains("knife", StringComparison.OrdinalIgnoreCase) || name.Contains("bayonet", StringComparison.OrdinalIgnoreCase))
-            return HookResult.Continue;
-
-        hook.SetReturn(false);
-        return HookResult.Stop;
-    }
-
     private HookResult OnCanAcquire(DynamicHook hook)
     {
         if (_giving > 0) return HookResult.Continue;
@@ -1602,7 +1569,11 @@ public sealed class ZombieCore : IZombieCore
         var controller = pawn?.Controller.Value?.As<CCSPlayerController>();
         if (controller is null || !controller.IsValid || !_infected.Contains(controller.Slot)) return HookResult.Continue;
 
-        hook.SetReturn(AcquireResult.NotAllowedByProhibition);
+        // A floor pickup is refused ONLY with InvalidItem: for pickups the engine ignores NotAllowedByProhibition,
+        // and the zombie picked up a gun that the per-tick safety net dropped again. The acquire method is the third
+        // parameter (the same approach as CS2Plugins/WeaponRestrict).
+        var method = hook.GetParam<AcquireMethod>(2);
+        hook.SetReturn(method == AcquireMethod.PickUp ? AcquireResult.InvalidItem : AcquireResult.NotAllowedByProhibition);
         return HookResult.Stop;
     }
 
