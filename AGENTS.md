@@ -16,6 +16,8 @@ A zombie infection mode for Counter-Strike 2 built on [CounterStrikeSharp](https
 - `src/ZombieMode.Money`, `src/ZombieMode.Magazines`, `src/ZombieMode.WeaponDamage` — extensions. Each is a
   separate plugin that talks to the core only through `IZombieCore`. **Use them as reference implementations.**
 - `templates/extension` — a minimal extension that builds on the first try. Start new plugins from it.
+- `.claude/skills/new-extension/SKILL.md` — the step-by-step procedure for a new extension, with a checklist.
+  Other assistants: follow the same file.
 
 ## How an extension talks to the core
 

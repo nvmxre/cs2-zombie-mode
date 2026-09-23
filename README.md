@@ -75,6 +75,8 @@ This repository is set up so that an AI coding assistant can write working exten
   damage hooks, model precache, hot reload leftovers, entities before map load. We learned each of them the hard
   way on a live server; your assistant does not have to.
 - **[templates/extension](templates/extension)** — a minimal extension that builds on the first try.
+- **A Claude Code skill** ([`.claude/skills/new-extension`](.claude/skills/new-extension/SKILL.md)) — scaffolds,
+  wires and checks a new extension end to end.
 - **The three extensions** in `src/` are small, commented reference implementations.
 
 Try it: open this repository in your assistant and ask
