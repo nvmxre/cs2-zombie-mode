@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ZombieMode.Api/ZombieMode.Api.csproj" />
+    <Project Path="src/ZombieMode.Magazines/ZombieMode.Magazines.csproj" />
+    <Project Path="src/ZombieMode.Money/ZombieMode.Money.csproj" />
+    <Project Path="src/ZombieMode.WeaponDamage/ZombieMode.WeaponDamage.csproj" />
+    <Project Path="src/ZombieMode/ZombieMode.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    A cs2-zombie-mode extension. Copy this folder, rename MyExtension everywhere, build with
+      dotnet build -c Release
+    and copy bin/Release/net10.0/MyExtension.dll (+ .deps.json) to
+      addons/counterstrikesharp/plugins/MyExtension/
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CounterStrikeSharp.API" Version="1.0.374">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <!-- The contract lives in addons/counterstrikesharp/shared/ZombieMode.Api on the server.
+         Private=false keeps it OUT of your plugin folder; a second copy breaks the capability lookup. -->
+    <Reference Include="ZombieMode.Api">
+      <HintPath>..\..\src\ZombieMode.Api\bin\Release\net10.0\ZombieMode.Api.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

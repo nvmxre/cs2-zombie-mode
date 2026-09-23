@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>ZombieMode.Magazines</AssemblyName>
+    <RootNamespace>ZombieMode.Magazines</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The contract lives in addons/counterstrikesharp/shared/, so it is not copied next to the plugin. -->
+    <ProjectReference Include="..\ZombieMode.Api\ZombieMode.Api.csproj">
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

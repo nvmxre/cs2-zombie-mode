@@ -1,0 +1,20 @@
+{
+  "hud.leap.ready": "Leap E",
+  "hud.leap.cooldown": "Leap {0}s",
+  "hud.rage.ready": "Berserk R",
+  "hud.rage.cooldown": "Berserk {0}s",
+  "round.nobody": "Nobody survived.",
+  "round.humans": "All the infected are destroyed.",
+  "round.zombies": "Everyone is infected.",
+  "round.strike": "Airstrike: the bomb caught the infected — humans win.",
+  "round.timeout": "Time is up. The infected did not hold out — humans win.",
+  "round.time_left": "The infected have {0} s left.",
+  "waiting.players": "Waiting for players — at least {0} needed, {1} now. The infection will not start.",
+  "infection.started": "One of the survivors is no longer themselves.",
+  "bleed.started": "The wound is bleeding. You need a medkit.",
+  "bleed.stopped": "Bleeding stopped.",
+  "turned.you": "You are no longer you.",
+  "turned.first_hint": "Leap — E, berserk — R ({0} s of invulnerability).",
+  "bite.healed": "+{0} HP",
+  "berserk.on": "Berserk — {0} s: invulnerable, no knockback."
+}

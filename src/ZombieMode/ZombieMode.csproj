@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>ZombieMode</AssemblyName>
+    <RootNamespace>ZombieMode</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The contract lives in addons/counterstrikesharp/shared/, so it is not copied next to the plugin. -->
+    <ProjectReference Include="..\ZombieMode.Api\ZombieMode.Api.csproj">
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Player-facing strings: one json per language, picked by each player's game language. -->
+    <None Include="lang\*.json" CopyToOutputDirectory="PreserveNewest" LinkBase="lang" />
+  </ItemGroup>
+</Project>

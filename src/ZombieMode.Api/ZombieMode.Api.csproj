@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Public contract of the zombie core (MIT). Deployed once to
+    addons/counterstrikesharp/shared/ZombieMode.Api/ZombieMode.Api.dll and referenced by the core
+    and by every extension. Keep it small and stable: changing it breaks third-party plugins.
+  -->
+  <PropertyGroup>
+    <AssemblyName>ZombieMode.Api</AssemblyName>
+    <RootNamespace>ZombieMode.Api</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+</Project>
