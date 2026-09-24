@@ -163,12 +163,10 @@ public sealed class InfectionConfig
     /// How many seconds a newly turned infected can pass through players after turning. 0 disables the
     /// pass-through and keeps only the push-away.
     ///
-    /// Needed exactly at the transition. During the buy phase teammates are intentionally non-solid
-    /// (`mp_solid_teammates 0`): everyone stands in a pile at spawn, and solid bodies only get in the way.
-    /// Solidity turns on with the first infection — and if two players were overlapping at that moment,
-    /// both would be stuck inside each other. So the new infected stays passable briefly and is pushed away.
+    /// Default 0: bodies are always solid (`mp_solid_teammates 1`), nobody walks through anybody. If players who
+    /// were overlapping at the moment of turning get stuck in pairs on your maps, give it about a second.
     /// </summary>
-    [JsonPropertyName("unstickSeconds")] public double UnstickSeconds { get; set; } = 1.2;
+    [JsonPropertyName("unstickSeconds")] public double UnstickSeconds { get; set; } = 0;
 
     /// <summary>
     /// How many seconds a player must stay inside another player before they are forcibly separated.

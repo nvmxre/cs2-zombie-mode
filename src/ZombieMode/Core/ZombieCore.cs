@@ -45,6 +45,7 @@ public sealed class ZombieCore : IZombieCore
     /// <summary>Slot → until when the player passes through others after turning.</summary>
     private readonly Dictionary<int, float> _passable = new();
     private bool _pickupHooked;
+    private bool _useHooked;
     private bool _damageHooked;
 
     /// <summary>Whether a fake death event (the infection shown in the kill feed) is being fired right now.</summary>
@@ -316,6 +317,12 @@ public sealed class ZombieCore : IZombieCore
         // unload. Without this every hot reload stacked another hook on top of the previous
         // one — damage was processed two or three times (one hit was logged three times
         // after three reloads).
+        if (_useHooked)
+        {
+            try { VirtualFunctions.CCSPlayer_WeaponServices_CanUseFunc.Unhook(OnCanUse, HookMode.Pre); }
+            catch (Exception e) { _log($"touch pickup hook was not removed: {e.Message}"); }
+            _useHooked = false;
+        }
         if (_pickupHooked)
         {
             try { VirtualFunctions.CCSPlayer_ItemServices_CanAcquireFunc.Unhook(OnCanAcquire, HookMode.Pre); }
@@ -1398,6 +1405,18 @@ public sealed class ZombieCore : IZombieCore
         {
             _log($"weapon pickup hook unavailable ({e.Message}) — weapons are stripped from the infected on tick");
         }
+        // Picking a weapon up off the floor by walking over it does not go through CanAcquire in CS2 1.41.8.x
+        // (not a single call in the log while an infected picked guns up — it looked like "grabbing a second
+        // knife"). It goes through CanUse, which is also where Zombie:Reborn refuses it.
+        try
+        {
+            VirtualFunctions.CCSPlayer_WeaponServices_CanUseFunc.Hook(OnCanUse, HookMode.Pre);
+            _useHooked = true;
+        }
+        catch (Exception e)
+        {
+            _log($"touch pickup hook unavailable ({e.Message}) — weapons are stripped from the infected on tick");
+        }
     }
 
     /// <summary>
@@ -1558,6 +1577,22 @@ public sealed class ZombieCore : IZombieCore
             if (victim.IsValid && !_infected.Contains(victim.Slot)) Convert(victim, first: false, attacker: biter);
         });
         return HookResult.Changed;
+    }
+
+    /// <summary>A weapon on the floor was touched: refused for the infected, the gun stays where it lies.</summary>
+    private HookResult OnCanUse(DynamicHook hook)
+    {
+        if (_giving > 0) return HookResult.Continue;
+        var services = hook.GetParam<CCSPlayer_WeaponServices>(0);
+        var controller = services.Pawn.Value?.Controller.Value?.As<CCSPlayerController>();
+        if (controller is null || !controller.IsValid || !_infected.Contains(controller.Slot)) return HookResult.Continue;
+
+        // The own knife stays usable, or the infected would be left empty-handed.
+        var weapon = hook.GetParam<CBasePlayerWeapon>(1);
+        if (weapon is not null && weapon.IsValid && weapon.DesignerName.Contains("knife", StringComparison.OrdinalIgnoreCase)) return HookResult.Continue;
+
+        hook.SetReturn(false);
+        return HookResult.Stop;
     }
 
     private HookResult OnCanAcquire(DynamicHook hook)

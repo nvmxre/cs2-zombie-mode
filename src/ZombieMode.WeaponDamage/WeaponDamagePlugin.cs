@@ -74,7 +74,7 @@ public sealed class WeaponDamageConfig : BasePluginConfig
 public sealed class WeaponDamagePlugin : BasePlugin, IPluginConfig<WeaponDamageConfig>
 {
     public override string ModuleName => "cs2-zombie-mode: weapon damage";
-    public override string ModuleVersion => "0.1.0";
+    public override string ModuleVersion => "0.1.1";
     public override string ModuleAuthor => "Project Zero";
     public override string ModuleDescription => "Per-weapon damage multipliers against zombies.";
 

@@ -37,7 +37,7 @@ public sealed class MagazinesConfig : BasePluginConfig
 public sealed class MagazinesPlugin : BasePlugin, IPluginConfig<MagazinesConfig>
 {
     public override string ModuleName => "cs2-zombie-mode: magazines";
-    public override string ModuleVersion => "0.1.0";
+    public override string ModuleVersion => "0.1.1";
     public override string ModuleAuthor => "Project Zero";
     public override string ModuleDescription => "Spare magazines per weapon.";
 

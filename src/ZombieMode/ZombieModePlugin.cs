@@ -21,7 +21,7 @@ namespace ZombieMode;
 public sealed class ZombieModePlugin : BasePlugin, IPluginConfig<ZombieModeConfig>
 {
     public override string ModuleName => "cs2-zombie-mode";
-    public override string ModuleVersion => "0.1.0";
+    public override string ModuleVersion => "0.1.1";
     public override string ModuleAuthor => "Project Zero";
     public override string ModuleDescription => "Zombie infection mode for CS2: hidden infected, bites that bleed, zombie abilities.";
 
@@ -93,6 +93,17 @@ public sealed class ZombieModePlugin : BasePlugin, IPluginConfig<ZombieModeConfi
     {
         foreach (var (cvar, value) in Config.Cvars)
             Server.ExecuteCommand($"{cvar} {value}");
+    }
+
+    /// <summary>
+    /// "X joined Terrorists" is noise here: infection moves players between teams all round long. The event stays,
+    /// only its chat line goes.
+    /// </summary>
+    [GameEventHandler(HookMode.Pre)]
+    public HookResult OnPlayerTeamQuiet(EventPlayerTeam @event, GameEventInfo info)
+    {
+        @event.Silent = true;
+        return HookResult.Continue;
     }
 
     [GameEventHandler]

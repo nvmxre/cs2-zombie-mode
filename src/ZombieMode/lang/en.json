@@ -1,5 +1,5 @@
 {
-  "hud.leap.ready": "Leap E",
+  "hud.leap.ready": "Leap Ctrl+Space",
   "hud.leap.cooldown": "Leap {0}s",
   "hud.rage.ready": "Berserk R",
   "hud.rage.cooldown": "Berserk {0}s",
@@ -14,7 +14,7 @@
   "bleed.started": "The wound is bleeding. You need a medkit.",
   "bleed.stopped": "Bleeding stopped.",
   "turned.you": "You are no longer you.",
-  "turned.first_hint": "Leap — E, berserk — R ({0} s of invulnerability).",
+  "turned.first_hint": "Leap — Ctrl + Space, berserk — R ({0} s of invulnerability).",
   "bite.healed": "+{0} HP",
   "berserk.on": "Berserk — {0} s: invulnerable, no knockback."
 }

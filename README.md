@@ -63,6 +63,24 @@ Requirements: a CS2 dedicated server with [Metamod:Source](https://www.sourcemm.
 
 Build from source instead: `./build.sh` (needs the .NET 10 SDK), then copy `dist/addons`.
 
+### CS2 1.41.8.x and CounterStrikeSharp 1.0.374
+
+The September 2026 CS2 updates (1.41.8.2, 1.41.8.3) moved functions that CounterStrikeSharp 1.0.374 finds by
+signature, and CounterStrikeSharp has not shipped a release for them yet. With its stock gamedata the server can crash on
+start, and the infected pick weapons up again (the touch hook, `CanUse`, finds nothing).
+
+Until a new CounterStrikeSharp release is out, use the gamedata from this repo — every signature in it matches once in
+the 1.41.8.3 `server.dll` and `libserver.so`:
+
+1. Copy [docs/gamedata/gamedata-cs2-1.41.8.json](docs/gamedata/gamedata-cs2-1.41.8.json) over
+   `addons/counterstrikesharp/gamedata/gamedata.json`.
+2. In `addons/counterstrikesharp/configs/core.json` set `"AutoUpdateEnabled": false` — otherwise CounterStrikeSharp
+   downloads its own gamedata on start and overwrites the file.
+
+The file is CounterStrikeSharp's gamedata with the fixes from its open pull request #1433 plus a new Windows signature for
+`CCSPlayer_ItemServices_CanAcquire`. Go back to the stock file (and turn auto-update on) once CounterStrikeSharp
+releases a version for 1.41.8.
+
 ## Sound
 
 Growls, pain and death from the zombie's position, a heartbeat while you bleed, a countdown to the first infection,

@@ -8,7 +8,7 @@ using ZombieMode.Runtime;
 namespace ZombieMode.Abilities;
 
 /// <summary>
-/// Zombie leap: the E key launches the infected along their view direction.
+/// Zombie leap: Ctrl and Space together, in either order, launch the infected along their view direction.
 /// The first infected gets full strength; regular infected get the `leapOthersFactor` fraction
 /// (half by default). All share the same cooldown.
 ///
@@ -40,15 +40,20 @@ public sealed class Leap
     private const float Window = 0.4f;
 
     /// <summary>
-    /// Button bit for the use key (E). The leap is bound to it.
+    /// The leap is Ctrl and Space held together, in either order (it used to be E).
     ///
-    /// Why not Ctrl+Space as originally planned: CS2 does not allow jumping from a full crouch, and
-    /// the engine clears the jump bit before the plugin sees it — across dozens of attempts in the log
-    /// the bit never showed up once. The combo only worked as "Space, then Ctrl in the air", which is
-    /// awkward to play. The engine leaves E alone, and the infected have no use for it anyway:
-    /// there is nothing for them to pick up.
+    /// The trap of the first attempt: for a crouching player the engine clears the jump bit in the processed
+    /// button mask, so "Ctrl first" never fired. So Space is also looked for in the raw client input
+    /// (<see cref="SeenInRaw"/>), and the keys need not be simultaneous: each counts as held for
+    /// <see cref="Window"/> seconds after it was last seen, and so does the ground — Space starts a normal jump,
+    /// so by the time Ctrl is down the player is already in the air.
     /// </summary>
-    private const long UseButton = 32;
+    private const long JumpButton = 2;    // IN_JUMP
+    private const long DuckButton = 4;    // IN_DUCK
+
+    private readonly Dictionary<int, float> _jumpSeen = new();
+    private readonly Dictionary<int, float> _duckSeen = new();
+    private readonly Dictionary<int, float> _groundSeen = new();
 
     public Leap(ZombieModeConfig config, Func<CCSPlayerController, bool> canLeap, Func<CCSPlayerController, bool> isFirst, Action<string> log)
     {
@@ -71,6 +76,9 @@ public sealed class Leap
     public void Reset()
     {
         _ready.Clear();
+        _jumpSeen.Clear();
+        _duckSeen.Clear();
+        _groundSeen.Clear();
     }
 
     /// <summary>Seconds left until the leap is ready; 0 means ready.</summary>
@@ -96,14 +104,17 @@ public sealed class Leap
             var pawn = player.PlayerPawn.Value;
             if (pawn is null || !pawn.IsValid || pawn.Health <= 0) continue;
 
-            if (!UsePressed(player, pawn)) continue;
+            if (!ComboHeld(player, pawn, now)) continue;
 
-            // Ground only: the leap does not work in mid-air.
-            if (pawn.GroundEntity.Value is null) continue;
+            // From the ground — or just off it: Space lifts the player before Ctrl is down.
+            if (!_groundSeen.TryGetValue(player.Slot, out var grounded) || now - grounded > Window) continue;
 
             // Not ready yet — just wait. The remaining time is shown by the shared ability HUD.
             if (_ready.TryGetValue(player.Slot, out var ready) && now < ready) continue;
 
+            // The combo is spent: the next leap needs a new press, not a held one.
+            _jumpSeen.Remove(player.Slot);
+            _duckSeen.Remove(player.Slot);
             Jump(player, pawn, now);
         }
         }
@@ -114,20 +125,33 @@ public sealed class Leap
         }
     }
 
-    /// <summary>
-    /// Whether the use key is held. Reads both the processed button mask and the raw input state:
-    /// the raw state contains the button regardless of whether the engine let it through.
-    /// </summary>
-    private static bool UsePressed(CCSPlayerController player, CCSPlayerPawn pawn)
+    /// <summary>Whether both keys were seen within <see cref="Window"/>. Also remembers when the player stood on the ground.</summary>
+    private bool ComboHeld(CCSPlayerController player, CCSPlayerPawn pawn, float now)
     {
-        if (((long)player.Buttons & UseButton) != 0) return true;
+        if (pawn.GroundEntity.Value is not null) _groundSeen[player.Slot] = now;
 
+        var mask = (long)player.Buttons;
+        if ((mask & JumpButton) != 0 || SeenInRaw(pawn, JumpButton)) _jumpSeen[player.Slot] = now;
+        if ((mask & DuckButton) != 0 || SeenInRaw(pawn, DuckButton)) _duckSeen[player.Slot] = now;
+
+        return _jumpSeen.TryGetValue(player.Slot, out var j) && now - j <= Window
+            && _duckSeen.TryGetValue(player.Slot, out var d) && now - d <= Window;
+    }
+
+    /// <summary>
+    /// The bit in the raw input states (all three slots: held, pressed this frame, released) — the key is there
+    /// even when the engine did not let it through, as with a crouching player's jump.
+    /// </summary>
+    private static bool SeenInRaw(CCSPlayerPawn pawn, long bit)
+    {
         try
         {
             var services = pawn.MovementServices;
             if (services is null) return false;
             var states = services.Buttons.ButtonStates;
-            return states.Length > 0 && ((long)states[0] & UseButton) != 0;
+            foreach (var state in states)
+                if (((long)state & bit) != 0) return true;
+            return false;
         }
         catch
         {
@@ -168,10 +192,9 @@ public sealed class Leap
             var p = player.PlayerPawn.Value;
             if (p is null || !p.IsValid || p.Health <= 0) return;
 
-            // Add the vertical part to the engine's own jump instead of replacing it: otherwise the
-            // leap came out weaker than a normal jump (the engine gives about 301 upward).
-            var jumpZ = Math.Max(p.AbsVelocity?.Z ?? 0f, 0f);
-            var velocity = new Vector(fx * power, fy * power, jumpZ + fz * power + up);
+            // The vertical part REPLACES the engine jump. With Ctrl + Space a normal jump (about 301 up) has
+            // already started, and adding to it threw the infected far too high.
+            var velocity = new Vector(fx * power, fy * power, fz * power + up);
             p.Teleport(null, null, velocity);
 
             if (_config.Debug)

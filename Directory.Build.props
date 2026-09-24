@@ -8,7 +8,7 @@
     <!-- CounterStrikeSharp ships its own assemblies on the server; plugins must not copy them. -->
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <EnableDynamicLoading>true</EnableDynamicLoading>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Authors>Project Zero</Authors>
     <RepositoryUrl>https://github.com/nvmxre/cs2-zombie-mode</RepositoryUrl>
   </PropertyGroup>

@@ -79,7 +79,7 @@ public sealed class MoneyConfig : BasePluginConfig
 public sealed class MoneyPlugin : BasePlugin, IPluginConfig<MoneyConfig>
 {
     public override string ModuleName => "cs2-zombie-mode: money";
-    public override string ModuleVersion => "0.1.0";
+    public override string ModuleVersion => "0.1.1";
     public override string ModuleAuthor => "Project Zero";
     public override string ModuleDescription => "Dollars for damage to zombies and for infections.";
 

@@ -1,5 +1,5 @@
 {
-  "hud.leap.ready": "Прыжок E",
+  "hud.leap.ready": "Прыжок Ctrl+Space",
   "hud.leap.cooldown": "Прыжок {0}с",
   "hud.rage.ready": "Берсерк R",
   "hud.rage.cooldown": "Берсерк {0}с",
@@ -14,7 +14,7 @@
   "bleed.started": "Рана кровоточит. Нужна аптечка.",
   "bleed.stopped": "Кровотечение остановлено.",
   "turned.you": "Вы больше не вы.",
-  "turned.first_hint": "Прыжок — E, берсерк — R ({0} с неуязвимости).",
+  "turned.first_hint": "Прыжок — Ctrl + пробел, берсерк — R ({0} с неуязвимости).",
   "bite.healed": "+{0} HP",
   "berserk.on": "Берсерк — {0} с: неуязвимость, без отбрасывания."
 }

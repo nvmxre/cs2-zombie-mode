@@ -26,12 +26,16 @@ public sealed class ZombieModeConfig : BasePluginConfig
         ["mp_roundtime_defuse"] = "7",
         ["mp_roundtime_hostage"] = "7",
         ["mp_ignore_round_win_conditions"] = "1",
-        ["mp_solid_teammates"] = "0",
+        // Nobody walks through anybody, whatever the team (it used to be "0" during the buy time).
+        ["mp_solid_teammates"] = "1",
         ["mp_autoteambalance"] = "0",
         ["mp_limitteams"] = "0",
         ["mp_give_player_c4"] = "0",
         ["bot_controllable"] = "0",
         ["healthshot_healthboost_damage_multiplier"] = "1",
+        // Bot radio chatter and the automatic "HE Grenade!" callouts only clutter the chat.
+        ["bot_chatter"] = "off",
+        ["sv_ignoregrenaderadio"] = "1",
     };
 
     /// <summary>
@@ -42,7 +46,7 @@ public sealed class ZombieModeConfig : BasePluginConfig
     public Dictionary<string, string> CvarsOnInfection { get; set; } = new()
     {
         ["mp_ignore_round_win_conditions"] = "0",
-        ["mp_solid_teammates"] = "2",
+        ["mp_solid_teammates"] = "1",
     };
 
     [JsonPropertyName("infection")] public InfectionConfig Infection { get; set; } = new();
